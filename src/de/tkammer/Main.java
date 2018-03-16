@@ -35,6 +35,10 @@ public class Main {
             throw new RuntimeException("Could not initialize Dispatcher.", exception);
         }
 
+        for (Processor p : processors) {
+            p.startExecution();
+        }
+
         for (long i = 0; i < Config.GeneratedProcessLimit; ++i) {
             Process process = new Process(i, randomCost(), randomPriority());
             try {
