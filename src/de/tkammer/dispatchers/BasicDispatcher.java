@@ -12,6 +12,7 @@ public class BasicDispatcher extends Dispatcher {
         super(processors, supervisor);
     }
 
+    @Override
     protected Processor chooseProcessor(List<Processor> processors, Process process) {
         int lowestCost = Integer.MAX_VALUE;
         Processor processor = null;
