@@ -25,16 +25,16 @@ public class Config {
      *     (AverageProcessorSpeed * 2) / (ProcessorCount + 1)
      */
 
-    public static final int MinProcessCost =  5000;
-    public static final int MaxProcessCost = 35000;
+    public static final int MinProcessCost =  1000;
+    public static final int MaxProcessCost = 19000;
 
     public static final int ProcessorCount = 4;
-    public static final int AverageProcessorSpeed = 50;
+    public static final int AverageProcessorSpeed = 250;
 
     public static final int MinPriority = 0;
     public static final int MaxPriority = 99;
 
-    public static final int ProcessGenerationPeriod = 100;
+    public static final int ProcessGenerationPeriod = 10;
 
-    public static final int GeneratedProcessLimit = 200;
+    public static final int GeneratedProcessLimit = 2000;
 }
