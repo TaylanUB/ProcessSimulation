@@ -35,8 +35,8 @@ public class Main {
             throw new RuntimeException("Could not initialize Dispatcher.", exception);
         }
 
-        for (long processId = 0; true; ++processId) {
-            Process process = new Process(processId, randomCost(), randomPriority());
+        for (long i = 0; i < Config.GeneratedProcessLimit; ++i) {
+            Process process = new Process(i, randomCost(), randomPriority());
             try {
                 dispatcher.dispatchProcess(process);
                 Thread.sleep(Config.ProcessGenerationPeriod);
@@ -44,5 +44,11 @@ public class Main {
                 throw new RuntimeException("Main thread interrupted.", exception);
             }
         }
+
+        for (Processor p : processors) {
+            p.stopExecution();
+        }
+
+        supervisor.finish();
     }
 }

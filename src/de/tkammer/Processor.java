@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Processor {
@@ -19,6 +20,9 @@ public class Processor {
     private final BlockingQueue<Process> processQueue;
     private final AtomicReference<Process> currentProcess;
 
+    private final Thread executionThread;
+    private final AtomicBoolean stopExecution;
+
     // For use by Supervisor.
     private final AtomicReference<Instant> startIdleTime = new AtomicReference<>();
 
@@ -31,11 +35,29 @@ public class Processor {
         processQueue = new LinkedBlockingQueue<>();
         currentProcess = new AtomicReference<>();
 
-        new Thread(this::executionLoop).start();
+        executionThread = new Thread(this::executionLoop);
+        stopExecution = new AtomicBoolean(false);
     }
 
     public long getId() {
         return id;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void startExecution() {
+        executionThread.start();
+    }
+
+    public void stopExecution() {
+        stopExecution.set(true);
+        try {
+            executionThread.join();
+        } catch (InterruptedException exception) {
+            throw new RuntimeException("Interrupt while waiting for thread to end.", exception);
+        }
     }
 
     public Status getStatus() {
@@ -71,7 +93,7 @@ public class Processor {
     }
 
     private void executionLoop() {
-        while (true) {
+        while (!stopExecution.get()) {
             try {
                 Process process = processQueue.take();
                 status.set(Status.Busy);
@@ -87,6 +109,8 @@ public class Processor {
                 throw new RuntimeException("Processor thread interrupted.", exception);
             }
         }
+
+        stopExecution.set(false);
     }
 
     private void executeProcess(Process process) throws InterruptedException {

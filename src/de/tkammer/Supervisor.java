@@ -8,9 +8,9 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class Supervisor {
-    private Writer waitDurationsWriter;
-    private Writer execDurationsWriter;
-    private Writer idleDurationsWriter;
+    private final Writer waitDurationsWriter;
+    private final Writer execDurationsWriter;
+    private final Writer idleDurationsWriter;
 
     public Supervisor() {
         try {
@@ -38,7 +38,6 @@ public class Supervisor {
             Duration duration = Duration.between(processor.getStartIdleTime(), Instant.now());
             try {
                 idleDurationsWriter.write(String.format("%s;%d\n", processor.getId(), duration.toMillis()));
-                idleDurationsWriter.flush();
             } catch (IOException exception) {
                 throw new RuntimeException("Write failed.", exception);
             }
@@ -52,7 +51,6 @@ public class Supervisor {
 
         try {
             waitDurationsWriter.write(String.format("%s;%d\n", process.getPriority(), duration));
-            waitDurationsWriter.flush();
         } catch (IOException exception) {
             throw new RuntimeException("Write failed.", exception);
         }
@@ -66,13 +64,22 @@ public class Supervisor {
 
         try {
             execDurationsWriter.write(String.format("%d;%d;%d\n", process.getPriority(), duration, process.getCost()));
-            execDurationsWriter.flush();
         } catch (IOException exception) {
             throw new RuntimeException("Write failed.", exception);
         }
 
         if (len == 0) {
             processor.setStartIdleTime();
+        }
+    }
+
+    public void finish() {
+        try {
+            waitDurationsWriter.close();
+            execDurationsWriter.close();
+            idleDurationsWriter.close();
+        } catch (IOException exception) {
+            throw new RuntimeException("Couldn't close writers.", exception);
         }
     }
 }
