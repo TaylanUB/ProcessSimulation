@@ -7,8 +7,8 @@ import de.tkammer.Supervisor;
 
 import java.util.List;
 
-public class BasicDispatcher extends Dispatcher {
-    public BasicDispatcher(List<Processor> processors, Supervisor supervisor) {
+public class SmartDispatcher extends Dispatcher {
+    public SmartDispatcher(List<Processor> processors, Supervisor supervisor) {
         super(processors, supervisor);
     }
 

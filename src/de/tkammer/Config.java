@@ -7,7 +7,7 @@ public class Config {
     public static final String ResultsDir = "C:\\Users\\tkammer\\Documents\\Umschulung\\11ITS3\\Programmierung";
 
     // Change this to test different Dispatcher implementations.
-    public static final Class<? extends Dispatcher> DispatcherClass = BasicDispatcher.class;
+    public static final Class<? extends Dispatcher> DispatcherClass = SmartDispatcher.class;
 
     public static final String WaitDurationsFile = ResultsDir + "\\wait-durations.csv";
     public static final String ExecDurationsFile = ResultsDir + "\\exec-durations.csv";
