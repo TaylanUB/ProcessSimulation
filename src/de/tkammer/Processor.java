@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -95,7 +96,10 @@ public class Processor {
     private void executionLoop() {
         while (!stopExecution.get()) {
             try {
-                Process process = processQueue.take();
+                Process process = processQueue.poll(100, TimeUnit.MILLISECONDS);
+                if (process == null) {
+                    continue;
+                }
                 status.set(Status.Busy);
                 process.setStatus(Process.Status.Started);
                 supervisor.recordProcessStart(this, process);
