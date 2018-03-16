@@ -23,6 +23,7 @@ public class BasicDispatcher extends Dispatcher {
                 // We don't know how much it progressed, but on average, it should be half done.
                 cost += currentProcess.getCost() / 2;
             }
+            cost /= p.getSpeed();
             if (cost < lowestCost) {
                 processor = p;
                 lowestCost = cost;
