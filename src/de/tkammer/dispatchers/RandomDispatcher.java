@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomDispatcher extends Dispatcher {
-    private Random random = new Random();
+    private Random random = new Random(0L);
 
     public RandomDispatcher(List<Processor> processors, Supervisor supervisor) {
         super(processors, supervisor);

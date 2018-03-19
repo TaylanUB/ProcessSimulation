@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Main {
-    private static final Random random = new Random();
+    private static final Random random = new Random(Config.ProcessGenerationSeed);
 
     private static int randomCost() {
         return Config.MinProcessCost + random.nextInt(Config.MaxProcessCost - Config.MinProcessCost + 1);

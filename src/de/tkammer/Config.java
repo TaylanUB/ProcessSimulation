@@ -36,5 +36,8 @@ public class Config {
 
     public static final int ProcessGenerationPeriod = 10;
 
+    // Random seed for cost and priority.
+    public static final long ProcessGenerationSeed = 0L;
+
     public static final int GeneratedProcessLimit = 2000;
 }
