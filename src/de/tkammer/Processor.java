@@ -94,10 +94,13 @@ public class Processor {
     }
 
     private void executionLoop() {
-        while (!stopExecution.get()) {
+        while (true) {
             try {
                 Process process = processQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (process == null) {
+                    if (stopExecution.get()) {
+                        break;
+                    }
                     continue;
                 }
                 status.set(Status.Busy);
