@@ -6,13 +6,20 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Supervisor {
-    private final Writer waitDurationsWriter;
-    private final Writer execDurationsWriter;
-    private final Writer idleDurationsWriter;
+    private Writer waitDurationsWriter;
+    private Writer execDurationsWriter;
+    private Writer idleDurationsWriter;
 
-    public Supervisor() {
+    private long processCount;
+    private long totalProcessCost;
+    private Instant startTime;
+
+    private final AtomicLong totalIdleTime = new AtomicLong();
+
+    public void start() {
         try {
             waitDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.WaitDurationsFile));
             execDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.ExecDurationsFile));
@@ -24,6 +31,8 @@ public class Supervisor {
         } catch (IOException exception) {
             throw new RuntimeException("Could not initialize Supervisor.", exception);
         }
+
+        startTime = Instant.now();
     }
 
     public void recordDispatch(Processor processor, Process process) {
@@ -41,7 +50,12 @@ public class Supervisor {
             } catch (IOException exception) {
                 throw new RuntimeException("Write failed.", exception);
             }
+
+            totalIdleTime.addAndGet(duration.toMillis());
         }
+
+        processCount += 1;
+        totalProcessCost += process.getCost();
     }
 
     public void recordProcessStart(Processor processor, Process process) {
@@ -81,5 +95,9 @@ public class Supervisor {
         } catch (IOException exception) {
             throw new RuntimeException("Couldn't close writers.", exception);
         }
+
+        Duration runTime = Duration.between(startTime, Instant.now());
+        System.out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",
+                processCount, totalProcessCost, runTime.toMillis(), totalIdleTime.get());
     }
 }

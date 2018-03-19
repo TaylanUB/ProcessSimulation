@@ -39,6 +39,8 @@ public class Main {
             p.startExecution();
         }
 
+        supervisor.start();
+
         for (long i = 0; i < Config.GeneratedProcessLimit; ++i) {
             Process process = new Process(i, randomCost(), randomPriority());
             try {
