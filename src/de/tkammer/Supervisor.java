@@ -29,7 +29,7 @@ public class Supervisor {
             idleDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.IdleDurationsFile));
 
             waitDurationsWriter.write("Priority;WaitDuration\n");
-            execDurationsWriter.write("Priority;ExecDuration;Cost\n");
+            execDurationsWriter.write("Priority;Cost;ExecDuration\n");
             idleDurationsWriter.write("CPU;IdleTime\n");
         } catch (IOException exception) {
             throw new RuntimeException("Could not initialize Supervisor.", exception);
@@ -40,11 +40,11 @@ public class Supervisor {
 
     public void recordDispatch(Processor processor, Process process) {
         process.setDispatchTime();
+
         int queueLength = processor.getQueueLength();
         if (processor.getCurrentProcess() != null) {
             queueLength += 1;
         }
-        System.out.printf("%s was assigned %s, has %d processes to wait for.\n", processor, process, queueLength);
 
         if (queueLength == 0 && processor.getStartIdleTime() != null) {
             Duration duration = Duration.between(processor.getStartIdleTime(), Instant.now());
@@ -65,32 +65,34 @@ public class Supervisor {
 
     public void recordProcessStart(Processor processor, Process process) {
         process.setStartTime();
-        long waitTime = Duration.between(process.getDispatchTime(), process.getStartTime()).toMillis();
-        System.out.printf("%s started %s after %d ms.\n", processor, process, waitTime);
+
+        int priority = process.getPriority();
+        long waitDuration = Duration.between(process.getDispatchTime(), process.getStartTime()).toMillis();
 
         try {
-            waitDurationsWriter.write(String.format("%s;%d\n", process.getPriority(), waitTime));
+            waitDurationsWriter.write(String.format("%s;%d\n", priority, waitDuration));
         } catch (IOException exception) {
             throw new RuntimeException("Write failed.", exception);
         }
 
-        longestWaitTime = Math.max(longestWaitTime, waitTime);
-        totalWaitTime += waitTime;
+        longestWaitTime = Math.max(longestWaitTime, waitDuration);
+        totalWaitTime += waitDuration;
     }
 
     public void recordProcessEnd(Processor processor, Process process) {
         process.setEndTime();
-        long duration = Duration.between(process.getStartTime(), process.getEndTime()).toMillis();
-        int len = processor.getQueueLength();
-        System.out.printf("%s finished %s after %d ms, leaving %d processes.\n", processor, process, duration, len);
+
+        int priority = process.getPriority();
+        int cost = process.getCost();
+        long execDuration = Duration.between(process.getStartTime(), process.getEndTime()).toMillis();
 
         try {
-            execDurationsWriter.write(String.format("%d;%d;%d\n", process.getPriority(), duration, process.getCost()));
+            execDurationsWriter.write(String.format("%d;%d;%d\n", priority, cost, execDuration));
         } catch (IOException exception) {
             throw new RuntimeException("Write failed.", exception);
         }
 
-        if (len == 0) {
+        if (processor.getQueueLength() == 0) {
             processor.setStartIdleTime();
         }
     }

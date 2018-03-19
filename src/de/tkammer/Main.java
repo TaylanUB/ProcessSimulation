@@ -49,6 +49,10 @@ public class Main {
             } catch (InterruptedException exception) {
                 throw new RuntimeException("Main thread interrupted.", exception);
             }
+
+            if (i % 100 == 0) {
+                System.out.printf("Generated %d out of %d processes.\n", i, Config.GeneratedProcessLimit);
+            }
         }
 
         for (Processor p : processors) {
