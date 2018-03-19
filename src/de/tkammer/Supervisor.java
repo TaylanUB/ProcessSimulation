@@ -16,7 +16,10 @@ public class Supervisor {
     private long processCount;
     private long totalProcessCost;
     private Instant startTime;
-
+    private long longestQueueLength;
+    private long totalQueueLength;
+    private long longestWaitTime;
+    private long totalWaitTime;
     private final AtomicLong totalIdleTime = new AtomicLong();
 
     public void start() {
@@ -37,13 +40,13 @@ public class Supervisor {
 
     public void recordDispatch(Processor processor, Process process) {
         process.setDispatchTime();
-        int len = processor.getQueueLength();
+        int queueLength = processor.getQueueLength();
         if (processor.getCurrentProcess() != null) {
-            len += 1;
+            queueLength += 1;
         }
-        System.out.printf("%s was assigned %s, has %d processes to wait for.\n", processor, process, len);
+        System.out.printf("%s was assigned %s, has %d processes to wait for.\n", processor, process, queueLength);
 
-        if (len == 0 && processor.getStartIdleTime() != null) {
+        if (queueLength == 0 && processor.getStartIdleTime() != null) {
             Duration duration = Duration.between(processor.getStartIdleTime(), Instant.now());
             try {
                 idleDurationsWriter.write(String.format("%s;%d\n", processor.getId(), duration.toMillis()));
@@ -56,18 +59,23 @@ public class Supervisor {
 
         processCount += 1;
         totalProcessCost += process.getCost();
+        longestQueueLength = Math.max(longestQueueLength, queueLength);
+        totalQueueLength += queueLength;
     }
 
     public void recordProcessStart(Processor processor, Process process) {
         process.setStartTime();
-        long duration = Duration.between(process.getDispatchTime(), process.getStartTime()).toMillis();
-        System.out.printf("%s started %s after %d ms.\n", processor, process, duration);
+        long waitTime = Duration.between(process.getDispatchTime(), process.getStartTime()).toMillis();
+        System.out.printf("%s started %s after %d ms.\n", processor, process, waitTime);
 
         try {
-            waitDurationsWriter.write(String.format("%s;%d\n", process.getPriority(), duration));
+            waitDurationsWriter.write(String.format("%s;%d\n", process.getPriority(), waitTime));
         } catch (IOException exception) {
             throw new RuntimeException("Write failed.", exception);
         }
+
+        longestWaitTime = Math.max(longestWaitTime, waitTime);
+        totalWaitTime += waitTime;
     }
 
     public void recordProcessEnd(Processor processor, Process process) {
@@ -99,5 +107,11 @@ public class Supervisor {
         Duration runTime = Duration.between(startTime, Instant.now());
         System.out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",
                 processCount, totalProcessCost, runTime.toMillis(), totalIdleTime.get());
+
+        int averageQueueLength = (int) (totalQueueLength * 1.0 / processCount);
+        System.out.printf("Longest queue length %d, average %d.\n", longestQueueLength, averageQueueLength);
+
+        int averageWaitTime = (int) (totalWaitTime * 1.0 / processCount);
+        System.out.printf("Longest wait time %d ms, average %d ms.\n", longestWaitTime, averageWaitTime);
     }
 }
