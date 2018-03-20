@@ -50,8 +50,8 @@ public class Main {
                 throw new RuntimeException("Main thread interrupted.", exception);
             }
 
-            if (i % 100 == 0) {
-                System.out.printf("Generated %d out of %d processes.\n", i, Config.GeneratedProcessLimit);
+            if ((i + 1) % 100 == 0) {
+                System.out.printf("Generated %d out of %d processes.\n", i + 1, Config.GeneratedProcessLimit);
             }
         }
 
