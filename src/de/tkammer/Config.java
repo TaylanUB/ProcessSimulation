@@ -4,14 +4,14 @@ import de.tkammer.dispatchers.*;
 
 public class Config {
     // Set this to a writable directory on your PC.
-    public static final String ResultsDir = "C:\\Users\\tkammer\\Documents\\Umschulung\\11ITS3\\Programmierung";
+    public String ResultsDir = "C:\\Users\\tkammer\\Documents\\Umschulung\\11ITS3\\Programmierung";
 
     // Change this to test different Dispatcher implementations.
-    public static final Class<? extends Dispatcher> DispatcherClass = SmartDispatcher.class;
+    public Class<? extends Dispatcher> DispatcherClass = SmartDispatcher.class;
 
-    public static final String WaitDurationsFile = ResultsDir + "\\wait-durations.csv";
-    public static final String ExecDurationsFile = ResultsDir + "\\exec-durations.csv";
-    public static final String IdleDurationsFile = ResultsDir + "\\idle-durations.csv";
+    public String WaitDurationsFile = ResultsDir + "\\wait-durations.csv";
+    public String ExecDurationsFile = ResultsDir + "\\exec-durations.csv";
+    public String IdleDurationsFile = ResultsDir + "\\idle-durations.csv";
 
     /*
      * For process generation and execution to break even, you should ensure the following equation:
@@ -25,19 +25,19 @@ public class Config {
      *     (AverageProcessorSpeed * 2) / (ProcessorCount + 1)
      */
 
-    public static final int MinProcessCost =  1000;
-    public static final int MaxProcessCost = 19000;
+    public int MinProcessCost =  1000;
+    public int MaxProcessCost = 19000;
 
-    public static final int ProcessorCount = 4;
-    public static final int AverageProcessorSpeed = 250;
+    public int ProcessorCount = 4;
+    public int AverageProcessorSpeed = 250;
 
-    public static final int MinPriority = 0;
-    public static final int MaxPriority = 99;
+    public int MinPriority = 0;
+    public int MaxPriority = 99;
 
-    public static final int ProcessGenerationPeriod = 10;
+    public int ProcessGenerationPeriod = 10;
 
     // Random seed for cost and priority.
-    public static final long ProcessGenerationSeed = 0L;
+    public long ProcessGenerationSeed = 0L;
 
-    public static final int GeneratedProcessLimit = 2000;
+    public int GeneratedProcessLimit = 2000;
 }

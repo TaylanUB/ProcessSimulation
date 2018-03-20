@@ -22,11 +22,17 @@ public class Supervisor {
     private long totalWaitTime;
     private final AtomicLong totalIdleTime = new AtomicLong();
 
+    private final Config config;
+
+    public Supervisor(Config config) {
+        this.config = config;
+    }
+
     public void start() {
         try {
-            waitDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.WaitDurationsFile));
-            execDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.ExecDurationsFile));
-            idleDurationsWriter = new OutputStreamWriter(new FileOutputStream(Config.IdleDurationsFile));
+            waitDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.WaitDurationsFile));
+            execDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.ExecDurationsFile));
+            idleDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.IdleDurationsFile));
 
             waitDurationsWriter.write("Priority;WaitDuration\n");
             execDurationsWriter.write("Priority;Cost;ExecDuration\n");
@@ -106,7 +112,7 @@ public class Supervisor {
             throw new RuntimeException("Couldn't close writers.", exception);
         }
 
-        System.out.printf("Using %s:\n", Config.DispatcherClass.getSimpleName());
+        System.out.printf("Using %s:\n", config.DispatcherClass.getSimpleName());
 
         Duration runTime = Duration.between(startTime, Instant.now());
         System.out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",
