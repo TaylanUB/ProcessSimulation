@@ -9,9 +9,15 @@ public class Config {
     // Change this to test different Dispatcher implementations.
     public Class<? extends Dispatcher> DispatcherClass = SmartDispatcher.class;
 
-    public String WaitDurationsFile = ResultsDir + "\\wait-durations.csv";
-    public String ExecDurationsFile = ResultsDir + "\\exec-durations.csv";
-    public String IdleDurationsFile = ResultsDir + "\\idle-durations.csv";
+    public String getWaitDurationsFile() {
+        return ResultsDir + "\\wait-durations.csv";
+    }
+    public String getExecDurationsFile() {
+        return ResultsDir + "\\exec-durations.csv";
+    }
+    public String getIdleDurationsFile() {
+        return ResultsDir + "\\idle-durations.csv";
+    }
 
     /*
      * For process generation and execution to break even, you should ensure the following equation:

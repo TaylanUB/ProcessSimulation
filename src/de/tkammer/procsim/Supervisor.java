@@ -30,9 +30,9 @@ public class Supervisor {
 
     public void start() {
         try {
-            waitDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.WaitDurationsFile));
-            execDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.ExecDurationsFile));
-            idleDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.IdleDurationsFile));
+            waitDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.getWaitDurationsFile()));
+            execDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.getExecDurationsFile()));
+            idleDurationsWriter = new OutputStreamWriter(new FileOutputStream(config.getIdleDurationsFile()));
 
             waitDurationsWriter.write("Priority;WaitDuration\n");
             execDurationsWriter.write("Priority;Cost;ExecDuration\n");
