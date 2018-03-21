@@ -1,6 +1,6 @@
-package de.tkammer;
+package de.tkammer.procsim;
 
-import de.tkammer.dispatchers.*;
+import de.tkammer.procsim.dispatchers.*;
 
 public class Config {
     // Set this to a writable directory on your PC.

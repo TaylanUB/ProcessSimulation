@@ -1,9 +1,9 @@
-package de.tkammer.dispatchers;
+package de.tkammer.procsim.dispatchers;
 
-import de.tkammer.Dispatcher;
-import de.tkammer.Process;
-import de.tkammer.Processor;
-import de.tkammer.Supervisor;
+import de.tkammer.procsim.Dispatcher;
+import de.tkammer.procsim.Process;
+import de.tkammer.procsim.Processor;
+import de.tkammer.procsim.Supervisor;
 
 import java.util.List;
 

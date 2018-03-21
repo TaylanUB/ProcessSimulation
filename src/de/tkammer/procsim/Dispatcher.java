@@ -1,4 +1,4 @@
-package de.tkammer;
+package de.tkammer.procsim;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ public abstract class Dispatcher {
         this.supervisor = supervisor;
     }
 
-    public void dispatchProcess(Process process) throws InterruptedException {
+    public void dispatchProcess(de.tkammer.procsim.Process process) throws InterruptedException {
         Processor processor = chooseProcessor(processors, process);
         supervisor.recordDispatch(processor, process);
         processor.enqueueProcess(process);
     }
 
-    protected abstract Processor chooseProcessor(List<Processor> processors, Process process);
+    protected abstract Processor chooseProcessor(List<Processor> processors, de.tkammer.procsim.Process process);
 }
