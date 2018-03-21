@@ -13,6 +13,9 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 public class Controller {
     @FXML private TextField outputDirTextField;
@@ -34,6 +37,8 @@ public class Controller {
                 StupidDispatcher.class,
                 RandomDispatcher.class
         );
+
+        dispatcherComboBox.setValue(BasicDispatcher.class);
 
         File desktopDir = new File(System.getProperty("user.home"), "Desktop");
         if (desktopDir.isDirectory()) {
@@ -59,6 +64,19 @@ public class Controller {
         Config config = new Config();
         config.setResultsDir(outputDirTextField.getText());
         config.setDispatcherClass(dispatcherComboBox.getValue());
-        new Runner(config).run();
+        config.setPrintWriter(new PrintWriter(new Writer() {
+            @Override
+            public void write(char[] cbuf, int off, int len) throws IOException {
+                resultsTextArea.appendText(new String(cbuf, off, len));
+            }
+
+            @Override
+            public void flush() throws IOException { }
+
+            @Override
+            public void close() throws IOException { }
+        }));
+        Runner runner = new Runner(config);
+        new Thread(runner::run).start();
     }
 }

@@ -2,10 +2,15 @@ package de.tkammer.procsim;
 
 import de.tkammer.procsim.dispatchers.*;
 
+import java.io.File;
+import java.io.PrintWriter;
+
 public class Config {
-    private String resultsDir;
+    private String resultsDir = System.getProperty("user.home") + File.separator + "Desktop";
 
     private Class<? extends Dispatcher> dispatcherClass = SmartDispatcher.class;
+
+    private PrintWriter printWriter = new PrintWriter(System.out);
 
     public void setResultsDir(String resultsDir) {
         this.resultsDir = resultsDir;
@@ -29,6 +34,14 @@ public class Config {
 
     public Class<? extends Dispatcher> getDispatcherClass() {
         return dispatcherClass;
+    }
+
+    public void setPrintWriter(PrintWriter printWriter) {
+        this.printWriter = printWriter;
+    }
+
+    public PrintWriter getPrintWriter() {
+        return printWriter;
     }
 
     /*

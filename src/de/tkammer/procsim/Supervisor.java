@@ -1,9 +1,6 @@
 package de.tkammer.procsim;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,9 +20,11 @@ public class Supervisor {
     private final AtomicLong totalIdleTime = new AtomicLong();
 
     private final Config config;
+    private final PrintWriter out;
 
     public Supervisor(Config config) {
         this.config = config;
+        out = config.getPrintWriter();
     }
 
     public void start() {
@@ -112,16 +111,16 @@ public class Supervisor {
             throw new RuntimeException("Couldn't close writers.", exception);
         }
 
-        System.out.printf("Using %s:\n", config.getDispatcherClass().getSimpleName());
+        out.printf("Using %s:\n", config.getDispatcherClass().getSimpleName());
 
         Duration runTime = Duration.between(startTime, Instant.now());
-        System.out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",
+        out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",
                 processCount, totalProcessCost, runTime.toMillis(), totalIdleTime.get());
 
         int averageQueueLength = (int) (totalQueueLength * 1.0 / processCount);
-        System.out.printf("Longest queue length %d, average %d.\n", longestQueueLength, averageQueueLength);
+        out.printf("Longest queue length %d, average %d.\n", longestQueueLength, averageQueueLength);
 
         int averageWaitTime = (int) (totalWaitTime * 1.0 / processCount);
-        System.out.printf("Longest wait time %d ms, average %d ms.\n", longestWaitTime, averageWaitTime);
+        out.printf("Longest wait time %d ms, average %d ms.\n", longestWaitTime, averageWaitTime);
     }
 }

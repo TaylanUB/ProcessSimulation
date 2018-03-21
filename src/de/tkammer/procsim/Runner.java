@@ -1,5 +1,6 @@
 package de.tkammer.procsim;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,12 @@ import java.util.Random;
 public class Runner {
     private final Config config;
     private final Random random;
+    private final PrintWriter out;
 
     public Runner(Config config) {
         this.config = config;
         random = new Random(config.processGenerationSeed);
+        out = config.getPrintWriter();
     }
 
     public void run() {
@@ -49,7 +52,7 @@ public class Runner {
             }
 
             if ((i + 1) % 100 == 0) {
-                System.out.printf("Generated %d out of %d processes.\n", i + 1, config.generatedProcessLimit);
+                out.printf("Generated %d out of %d processes.\n", i + 1, config.generatedProcessLimit);
             }
         }
 
