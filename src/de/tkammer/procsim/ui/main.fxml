@@ -10,12 +10,12 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.tkammer.procsim.ui.Controller">
     <children>
         <Label layoutX="14.0" layoutY="14.0" text="CSV Output Directory:" />
-        <TextField id="outputDirTextField" layoutX="14.0" layoutY="40.0" prefHeight="31.0" prefWidth="477.0" />
-        <Button id="outputDirButton" layoutX="507.0" layoutY="40.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="79.0" text="Choose" AnchorPane.leftAnchor="507.0" />
+        <TextField fx:id="outputDirTextField" layoutX="14.0" layoutY="40.0" prefHeight="31.0" prefWidth="477.0" />
+        <Button fx:id="outputDirButton" layoutX="507.0" layoutY="40.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="79.0" text="Choose" AnchorPane.leftAnchor="507.0" />
         <Label layoutX="14.0" layoutY="80.0" text="Dispatcher implementation:" />
-        <ComboBox id="dispatcherComboBox" layoutX="14.0" layoutY="106.0" prefHeight="31.0" prefWidth="477.0" />
-        <Button id="startButton" layoutX="507.0" layoutY="106.0" mnemonicParsing="false" text="Run test!" />
+        <ComboBox fx:id="dispatcherComboBox" layoutX="14.0" layoutY="106.0" prefHeight="31.0" prefWidth="477.0" />
+        <Button fx:id="startButton" layoutX="507.0" layoutY="106.0" mnemonicParsing="false" text="Run test!" />
         <Label layoutX="14.0" layoutY="146.0" text="Progress:" />
-        <TextArea id="resultsTextArea" layoutX="14.0" layoutY="172.0" prefHeight="211.0" prefWidth="570.0" />
+        <TextArea fx:id="resultsTextArea" layoutX="14.0" layoutY="172.0" prefHeight="211.0" prefWidth="570.0" />
     </children>
 </AnchorPane>
