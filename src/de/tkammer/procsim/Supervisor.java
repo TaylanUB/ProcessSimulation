@@ -112,7 +112,7 @@ public class Supervisor {
             throw new RuntimeException("Couldn't close writers.", exception);
         }
 
-        System.out.printf("Using %s:\n", config.DispatcherClass.getSimpleName());
+        System.out.printf("Using %s:\n", config.getDispatcherClass().getSimpleName());
 
         Duration runTime = Duration.between(startTime, Instant.now());
         System.out.printf("Finished %d processes (cost %d) in %d ms, idle time %d ms.\n",

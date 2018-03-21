@@ -11,21 +11,21 @@ public class Runner {
 
     public Runner(Config config) {
         this.config = config;
-        random = new Random(config.ProcessGenerationSeed);
+        random = new Random(config.processGenerationSeed);
     }
 
     public void run() {
         Supervisor supervisor = new Supervisor(config);
 
         List<Processor> processors = new ArrayList<>();
-        for (int i = 1; i <= config.ProcessorCount; ++i) {
-            int speedUnit = config.AverageProcessorSpeed * 2 / (config.ProcessorCount + 1);
+        for (int i = 1; i <= config.processorCount; ++i) {
+            int speedUnit = config.averageProcessorSpeed * 2 / (config.processorCount + 1);
             processors.add(new Processor(i, i * speedUnit, supervisor));
         }
 
         Dispatcher dispatcher;
         try {
-            Constructor<? extends Dispatcher> constructor = config.DispatcherClass.getDeclaredConstructor(
+            Constructor<? extends Dispatcher> constructor = config.getDispatcherClass().getDeclaredConstructor(
                     List.class, Supervisor.class
             );
             dispatcher = constructor.newInstance(processors, supervisor);
@@ -39,17 +39,17 @@ public class Runner {
 
         supervisor.start();
 
-        for (long i = 0; i < config.GeneratedProcessLimit; ++i) {
+        for (long i = 0; i < config.generatedProcessLimit; ++i) {
             Process process = new Process(i, randomCost(), randomPriority());
             try {
                 dispatcher.dispatchProcess(process);
-                Thread.sleep(config.ProcessGenerationPeriod);
+                Thread.sleep(config.processGenerationPeriod);
             } catch (InterruptedException exception) {
                 throw new RuntimeException("Main thread interrupted.", exception);
             }
 
             if ((i + 1) % 100 == 0) {
-                System.out.printf("Generated %d out of %d processes.\n", i + 1, config.GeneratedProcessLimit);
+                System.out.printf("Generated %d out of %d processes.\n", i + 1, config.generatedProcessLimit);
             }
         }
 
@@ -61,10 +61,10 @@ public class Runner {
     }
 
     private int randomCost() {
-        return config.MinProcessCost + random.nextInt(config.MaxProcessCost - config.MinProcessCost + 1);
+        return config.minProcessCost + random.nextInt(config.maxProcessCost - config.minProcessCost + 1);
     }
 
     private int randomPriority() {
-        return config.MinPriority + random.nextInt(config.MaxPriority - config.MinPriority + 1);
+        return config.minPriority + random.nextInt(config.maxPriority - config.minPriority + 1);
     }
 }
