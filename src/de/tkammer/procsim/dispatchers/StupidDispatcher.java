@@ -12,7 +12,7 @@ public class StupidDispatcher extends Dispatcher {
         super(processors, supervisor);
     }
 
-    int index = 0;
+    private int index = 0;
 
     @Override
     protected Processor chooseProcessor(List<Processor> processors, Process process) {
