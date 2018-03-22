@@ -122,5 +122,10 @@ public class Supervisor {
 
         int averageWaitTime = (int) (totalWaitTime * 1.0 / processCount);
         out.printf("Longest wait time %d ms, average %d ms.\n", longestWaitTime, averageWaitTime);
+
+        out.printf("Wrote CSV files:\n%s\n%s\n%s\n",
+                config.getWaitDurationsFile(),
+                config.getExecDurationsFile(),
+                config.getIdleDurationsFile());
     }
 }
